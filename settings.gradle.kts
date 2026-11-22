@@ -21,6 +21,7 @@ stonecutter {
         fun legacy(mc: String) = version("$mc-fabric", mc).apply { buildscript = "build.fabric-legacy.gradle.kts" }
 
         legacy("1.21.11")
+        version("1.21.11-loader0195-fabric", "1.21.11").apply { buildscript = "build.fabric-legacy.gradle.kts" }
         legacy("1.21.8")
         legacy("1.21.4")
         legacy("1.21.1")

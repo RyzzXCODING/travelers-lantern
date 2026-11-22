@@ -5,8 +5,10 @@ plugins {
 val mc = stonecutter.current.version
 val modId = property("mod.id") as String
 val javaVer = if (mc.startsWith("1.20")) 17 else 21
+val loader = property("deps.fabric_loader") as String
+val loaderSuffix = if (loader == "0.19.5") "-loader-0.19.5" else ""
 
-version = "${property("mod.version")}+$mc-fabric"
+version = "${property("mod.version")}+$mc-fabric$loaderSuffix"
 group = property("mod.group") as String
 base.archivesName = modId
 
@@ -84,7 +86,7 @@ tasks.named<Jar>("jar") {
 
 if (mc == "1.21.11") {
     tasks.named<net.fabricmc.loom.task.RemapJarTask>("remapJar") {
-        archiveFileName.set("travelers-lantern-modified-by-alpoyy-1.21.11-fabric.jar")
+        archiveFileName.set("travelers-lantern-modified-by-alpoyy-1.21.11-fabric$loaderSuffix.jar")
     }
 }
 
