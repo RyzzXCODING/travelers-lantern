@@ -26,14 +26,14 @@ public abstract class LevelRendererMixin {
 }
 //?}
 //? if >=1.21.11 <1.21.12 {
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.buffers.GpuBufferSlice;
+import com.mojang.blaze3d.resource.GraphicsResourceAllocator;
 import io.github.profetgit.travelerslantern.client.BeltClient;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.LightTexture;
 import org.joml.Matrix4f;
+import org.joml.Vector4f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -42,13 +42,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 // The lantern swings only from the world's render; other renders of a player reuse that frame's swing.
 @Mixin(LevelRenderer.class)
 public abstract class LevelRendererMixin {
-    @Inject(method = "renderLevel", at = @At("HEAD"))
-    private void travelerslantern$start(DeltaTracker delta, boolean b, Camera camera, GameRenderer gr, LightTexture lt, Matrix4f m1, Matrix4f m2, CallbackInfo ci) {
+    @Inject(method = "renderLevel(Lcom/mojang/blaze3d/resource/GraphicsResourceAllocator;Lnet/minecraft/client/DeltaTracker;ZLnet/minecraft/client/Camera;Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;Lcom/mojang/blaze3d/buffers/GpuBufferSlice;Lorg/joml/Vector4f;Z)V", at = @At("HEAD"))
+    private void travelerslantern$start(GraphicsResourceAllocator allocator, DeltaTracker delta, boolean b, Camera camera, Matrix4f m1, Matrix4f m2, Matrix4f m3, GpuBufferSlice slice, Vector4f vec, boolean outline, CallbackInfo ci) {
         BeltClient.setWorldPass(true);
     }
 
-    @Inject(method = "renderLevel", at = @At("TAIL"))
-    private void travelerslantern$end(DeltaTracker delta, boolean b, Camera camera, GameRenderer gr, LightTexture lt, Matrix4f m1, Matrix4f m2, CallbackInfo ci) {
+    @Inject(method = "renderLevel(Lcom/mojang/blaze3d/resource/GraphicsResourceAllocator;Lnet/minecraft/client/DeltaTracker;ZLnet/minecraft/client/Camera;Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;Lcom/mojang/blaze3d/buffers/GpuBufferSlice;Lorg/joml/Vector4f;Z)V", at = @At("TAIL"))
+    private void travelerslantern$end(GraphicsResourceAllocator allocator, DeltaTracker delta, boolean b, Camera camera, Matrix4f m1, Matrix4f m2, Matrix4f m3, GpuBufferSlice slice, Vector4f vec, boolean outline, CallbackInfo ci) {
         BeltClient.setWorldPass(false);
     }
 }
