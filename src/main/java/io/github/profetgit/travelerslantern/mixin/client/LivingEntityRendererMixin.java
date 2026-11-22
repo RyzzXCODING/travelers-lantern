@@ -1,6 +1,6 @@
 package io.github.profetgit.travelerslantern.mixin.client;
 
-//? if >=1.21.9 {
+//? if >=1.21.12 {
 import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.profetgit.travelerslantern.client.BeltState;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -22,8 +22,31 @@ public abstract class LivingEntityRendererMixin {
     }
 }
 //?}
-//? if >=1.21.2 <1.21.9 {
-/*import com.mojang.blaze3d.vertex.PoseStack;
+//? if >=1.21.11 <1.21.12 {
+import com.mojang.blaze3d.vertex.PoseStack;
+import io.github.profetgit.travelerslantern.client.BeltState;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+import net.minecraft.client.renderer.state.CameraRenderState;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+// Keeps the pose an avatar's render starts from (camera offset, before the body's rotations) for the belt layer.
+@Mixin(LivingEntityRenderer.class)
+public abstract class LivingEntityRendererMixin {
+    @Inject(method = "submit(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V",
+        at = @At("HEAD"))
+    private void travelerslantern$root(LivingEntityRenderState state, PoseStack ps, SubmitNodeCollector c, CameraRenderState camera, CallbackInfo ci) {
+        if (state instanceof BeltState b && b.travelerslantern$lantern() != null) b.travelerslantern$root().set(ps.last().pose());
+    }
+}
+//?}
+//? if >=1.21.2 <1.21.11 {
+import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.profetgit.travelerslantern.client.BeltState;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
@@ -42,9 +65,9 @@ public abstract class LivingEntityRendererMixin {
         if (state instanceof BeltState b && b.travelerslantern$lantern() != null) b.travelerslantern$root().set(ps.last().pose());
     }
 }
-*///?}
+//?}
 //? if <1.21.2 {
-/*import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.profetgit.travelerslantern.client.BeltLayer;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -64,4 +87,4 @@ public abstract class LivingEntityRendererMixin {
         if (entity instanceof AbstractClientPlayer) BeltLayer.ROOT.set(ps.last().pose());
     }
 }
-*///?}
+//?}

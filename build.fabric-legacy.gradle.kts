@@ -23,6 +23,10 @@ dependencies {
     mappings(loom.officialMojangMappings())
     annotationProcessor("net.fabricmc:sponge-mixin:0.17.4+mixin.0.8.7")
     modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
+    // Fabric API is only required for some versions
+    findProperty("deps.fabric_api")?.let {
+        modImplementation("net.fabricmc.fabric-api:fabric-api:${property("deps.fabric_api")}")
+    }
     // optional: Mod Menu's settings button; compile only, not shipped or required
     modCompileOnly("com.terraformersmc:modmenu:${property("deps.modmenu")}") { isTransitive = false }
 
@@ -76,6 +80,12 @@ tasks.processResources {
 
 tasks.named<Jar>("jar") {
     from(rootProject.file("LICENSE"))
+}
+
+if (mc == "1.21.11") {
+    tasks.named<net.fabricmc.loom.task.RemapJarTask>("remapJar") {
+        archiveFileName.set("travelers-lantern-modified-by-alpoyy-1.21.11-fabric.jar")
+    }
 }
 
 extra["mcVersion"] = mc
